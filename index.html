@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shitalendra Kumar Yadav | Student Developer Portfolio</title>
+  <meta name="description" content="Portfolio of Shitalendra Kumar Yadav — a passionate student developer skilled in Java, Python, and Web Development. Explore projects, skills, and contact info." />
+  <meta name="author" content="Shitalendra Kumar Yadav" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- PWA manifest + theme -->
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#00d4ff"/>
+  <link rel="apple-touch-icon" href="icons/icon-192.png"/>
+
+  <!-- Preconnect to external origins for faster loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+  <!-- Critical CSS inlined for fast first paint -->
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px}
+    body{font-family:'Inter',system-ui,sans-serif;background:#06060f;color:#e8eaf6;line-height:1.7;overflow-x:hidden}
+    body.preload{overflow:hidden}
+    #introScreen{position:fixed;inset:0;z-index:9999;background:#06060f;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .8s ease,visibility .8s ease}
+    #introScreen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .intro-inner{text-align:center}
+    .intro-logo{font-family:'Cinzel',serif;font-size:clamp(1.6rem,5vw,2.8rem);font-weight:600;color:#fff;letter-spacing:.12em;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;gap:.2em}
+    .intro-bracket{color:#00d4ff}.intro-name{color:#fff;min-width:1ch}.intro-cursor{color:#00d4ff;animation:blink .7s steps(1) infinite}
+    @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+    .intro-bar-wrap{width:min(340px,80vw);height:3px;background:rgba(255,255,255,.08);border-radius:4px;margin:0 auto 1.2rem;overflow:hidden}
+    .intro-bar{height:100%;width:0;background:linear-gradient(90deg,#00d4ff,#a855f7);border-radius:4px;transition:width .05s linear}
+    .intro-label{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.78);font-family:'Fira Code',monospace}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;background:rgba(6,6,15,.82);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid rgba(255,255,255,.06)}
+    #bgCanvas,#trailCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+    #bgCanvas{z-index:0}#trailCanvas{z-index:9998}
+  </style>
+  <!-- Load main stylesheet asynchronously -->
+  <link rel="preload" as="style" href="style.css" onload="this.onload=null;this.rel='stylesheet'"/>
+  <noscript><link rel="stylesheet" href="style.css"/></noscript>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Cinzel:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'"/>
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet"/></noscript>
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'"/>
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/></noscript>
+
+  <!-- Font display is handled by &display=swap in the Google Fonts URL -->
+</head>
+<body class="preload">
+
+  <!-- ══ CINEMATIC INTRO SCREEN ══ -->
+  <div id="introScreen">
+    <div class="intro-inner">
+      <div class="intro-logo">
+        <span class="intro-bracket">&lt;</span>
+        <span class="intro-name" id="introTyped"></span>
+        <span class="intro-cursor">|</span>
+        <span class="intro-bracket">/&gt;</span>
+      </div>
+      <div class="intro-bar-wrap"><div class="intro-bar" id="introBar"></div></div>
+      <p class="intro-label">Loading portfolio…</p>
+    </div>
+  </div>
+
+  <!-- ══ CURSOR TRAIL ══ -->
+  <canvas id="trailCanvas"></canvas>
+
+  <!-- ══ 3D CANVAS (Three.js background) ══ -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- ══ GLASS OVERLAY (frosted glass layer) ══ -->
+  <div class="glass-overlay"></div>
+
+  <!-- ══ AMBIENT SOUND TOGGLE ══ -->
+  <div class="sound-toggle-wrap">
+    <button class="sound-btn" id="soundBtn" aria-label="Toggle ambient sound" title="Toggle ambient wind sound">
+      <i class="fa fa-volume-xmark" id="soundIcon"></i>
+    </button>
+  </div>
+
+  <!-- ══ ACCENT COLOUR PICKER (floating) ══ -->
+  <div class="colour-picker-wrap" id="colourPicker" title="Pick accent colour">
+    <button class="colour-picker-btn" id="colourPickerBtn" aria-label="Accent colour picker">
+      <i class="fa fa-palette"></i>
+    </button>
+    <div class="colour-swatches" id="colourSwatches">
+      <button class="swatch" data-colour="#00d4ff" style="background:#00d4ff" title="Cyan"></button>
+      <button class="swatch" data-colour="#a855f7" style="background:#a855f7" title="Purple"></button>
+      <button class="swatch" data-colour="#f59e0b" style="background:#f59e0b" title="Amber"></button>
+      <button class="swatch" data-colour="#10b981" style="background:#10b981" title="Emerald"></button>
+      <button class="swatch" data-colour="#ef4444" style="background:#ef4444" title="Red"></button>
+      <button class="swatch" data-colour="#f97316" style="background:#f97316" title="Orange"></button>
+      <button class="swatch active" data-colour="#00d4ff" style="background:#00d4ff"></button>
+      <input type="color" id="customColour" value="#00d4ff" title="Custom colour"/>
+    </div>
+  </div>
+
+  <!-- ── NAV ── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo">&lt;ShitalendraKY /&gt;</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#certificates">Achievements</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <!-- Theme toggle -->
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark">
+        <i class="fa fa-sun" id="themeIcon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="hero">
+
+    <!-- Code Rain decoration -->
+    <canvas id="codeRainCanvas" class="code-rain" aria-hidden="true"></canvas>
+
+    <div class="hero-content">
+      <p class="hero-greeting">👋 Hello, I'm</p>
+      <h1 class="hero-name">Shitalendra Kumar Yadav</h1>
+      <p class="hero-title">Student Developer<span class="sep"> | </span>Java · Python · Web Development</p>
+      <p class="hero-tagline">
+        Passionate about building <span class="accent">clean, efficient code</span> — currently deep-diving into
+        algorithms, data structures, and full-stack fundamentals.
+      </p>
+      <div class="hero-btns">
+        <a href="#" onclick="alert('Resume is not available yet. Please check back later!'); return false;" class="btn btn-primary" title="Resume coming soon">
+          <i class="fa fa-download"></i> Download Resume
+        </a>
+        <a href="#contact" class="btn btn-outline">
+          <i class="fa fa-envelope"></i> Contact Me
+        </a>
+      </div>
+      <div class="hero-socials">
+        <a href="https://github.com/Shitalendra-Immortal" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://linkedin.com/in/shitalendra-kumar-yadav-018442378/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="mailto:shitalendrak@gmail.com" aria-label="Email"><i class="fa fa-envelope"></i></a>
+      </div>
+    </div>
+
+    <div class="hero-scroll-hint">
+      <span>Scroll down</span>
+      <i class="fa fa-chevron-down"></i>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section class="section" id="about" data-parallax="0.04">
+    <div class="container">
+      <h2 class="section-title">About <span class="accent">Me</span></h2>
+      <div class="about-grid">
+        <div class="about-img-wrap">
+          <img src="https://via.placeholder.com/320x320/1a1a2e/00d4ff?text=YN" alt="Profile Photo" class="about-img" width="320" height="320" loading="lazy"/>
+          <div class="about-img-badge"><i class="fa fa-code"></i> Open to Internships</div>
+        </div>
+        <div class="about-text">
+          <p>I'm a <strong>Computer Science student</strong> at <span class="accent">CGC University, Mohali, Punjab</span>,
+            with a strong interest in <strong>Java</strong> and <strong>Python</strong> development.
+            I enjoy solving algorithmic challenges and understanding the logic behind efficient programs.</p>
+          <p>My current focus is on mastering <strong>data structures &amp; algorithms</strong> — from arrays
+            and stacks to searching and sorting — alongside building responsive, well-structured web pages
+            using <strong>HTML &amp; CSS</strong>.</p>
+          <p>I'm actively looking for <strong>internship opportunities</strong> and <strong>entry-level roles</strong>
+            where I can contribute, learn, and grow as a developer. I believe in writing code that is not just
+            functional, but clean and maintainable.</p>
+          <div class="about-tags">
+            <span class="tag">☕ Java Enthusiast</span>
+            <span class="tag">🐍 Python Learner</span>
+            <span class="tag">🌐 Web Dev</span>
+            <span class="tag">📍 Mohali, Punjab</span>
+          </div>
+          <!-- Animated counters -->
+          <div class="counter-row">
+            <div class="counter-item">
+              <span class="counter-num" data-target="50" data-suffix="+">0</span>
+              <span class="counter-label">Problems Solved</span>
+            </div>
+            <div class="counter-item">
+              <span class="counter-num" data-target="3" data-suffix="">0</span>
+              <span class="counter-label">Projects Built</span>
+            </div>
+            <div class="counter-item">
+              <span class="counter-num" data-target="2" data-suffix=" yrs">0</span>
+              <span class="counter-label">Coding Experience</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SKILLS ── -->
+  <section class="section section-alt" id="skills" data-parallax="0.06">
+    <div class="container">
+      <h2 class="section-title">My <span class="accent">Skills</span></h2>
+      <p class="section-sub">Technologies and tools I work with</p>
+      <div class="skills-categories">
+        <div class="skill-category">
+          <h3><i class="fa fa-code"></i> Languages</h3>
+          <div class="skill-badges">
+            <span class="badge badge-java"><i class="fab fa-java"></i> Java</span>
+            <span class="badge badge-python"><i class="fab fa-python"></i> Python</span>
+            <span class="badge badge-html"><i class="fab fa-html5"></i> HTML5</span>
+            <span class="badge badge-css"><i class="fab fa-css3-alt"></i> CSS3</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3><i class="fa fa-diagram-project"></i> Data Structures</h3>
+          <div class="skill-badges">
+            <span class="badge">📦 Arrays</span>
+            <span class="badge">🔗 Linked Lists</span>
+            <span class="badge">📚 Stacks</span>
+            <span class="badge">🌳 Trees (basics)</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3><i class="fa fa-sort"></i> Algorithms</h3>
+          <div class="skill-badges">
+            <span class="badge">🔍 Linear Search</span>
+            <span class="badge">⚡ Binary Search</span>
+            <span class="badge">🫧 Bubble Sort</span>
+            <span class="badge">📌 Selection Sort</span>
+            <span class="badge">🔄 Insertion Sort</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3><i class="fa fa-tools"></i> Tools &amp; Platforms</h3>
+          <div class="skill-badges">
+            <span class="badge badge-vscode"><i class="fa fa-code"></i> VS Code</span>
+            <span class="badge badge-git"><i class="fab fa-git-alt"></i> Git</span>
+            <span class="badge badge-github"><i class="fab fa-github"></i> GitHub</span>
+            <span class="badge">🖥️ IntelliJ IDEA</span>
+          </div>
+        </div>
+      </div>
+      <div class="proficiency">
+        <h3 style="margin-bottom:1.2rem;">Proficiency Overview</h3>
+        <div class="bar-row"><span>Java</span><div class="bar-track"><div class="bar-fill" data-width="75"></div></div><span class="bar-pct">75%</span></div>
+        <div class="bar-row"><span>Python</span><div class="bar-track"><div class="bar-fill" data-width="70"></div></div><span class="bar-pct">70%</span></div>
+        <div class="bar-row"><span>HTML / CSS</span><div class="bar-track"><div class="bar-fill" data-width="80"></div></div><span class="bar-pct">80%</span></div>
+        <div class="bar-row"><span>DSA Concepts</span><div class="bar-track"><div class="bar-fill" data-width="60"></div></div><span class="bar-pct">60%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECTS ── -->
+  <section class="section" id="projects">
+    <div class="container">
+      <h2 class="section-title">Featured <span class="accent">Projects</span></h2>
+      <p class="section-sub">Things I've built to practise and learn</p>
+      <div class="projects-grid">
+        <div class="project-card">
+          <div class="project-img">
+            <img src="https://via.placeholder.com/400x200/0f3460/00d4ff?text=Student+Grade+Tracker" alt="Student Grade Tracker" width="400" height="200" loading="lazy"/>
+            <div class="project-overlay"><span class="project-num">#01</span></div>
+          </div>
+          <div class="project-body">
+            <h3>Student Grade Tracker</h3>
+            <p>A console-based Java application that allows students to enter subject marks and calculates GPA, percentage, and letter grades automatically.</p>
+            <div class="tech-tags"><span class="tech">Java</span><span class="tech">OOP</span><span class="tech">Arrays</span></div>
+          </div>
+          <div class="project-footer">
+            <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-sm btn-outline"><i class="fab fa-github"></i> View Code</a>
+            <a href="#" class="btn btn-sm btn-ghost"><i class="fa fa-external-link-alt"></i> Live Demo</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-img">
+            <img src="https://via.placeholder.com/400x200/16213e/00d4ff?text=DSA+Visualiser" alt="DSA Visualiser" width="400" height="200" loading="lazy"/>
+            <div class="project-overlay"><span class="project-num">#02</span></div>
+          </div>
+          <div class="project-body">
+            <h3>DSA Algorithm Visualiser</h3>
+            <p>A Python script that demonstrates popular sorting algorithms (bubble, selection, insertion) with step-by-step console output for learning purposes.</p>
+            <div class="tech-tags"><span class="tech">Python</span><span class="tech">Algorithms</span><span class="tech">CLI</span></div>
+          </div>
+          <div class="project-footer">
+            <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-sm btn-outline"><i class="fab fa-github"></i> View Code</a>
+            <a href="#" class="btn btn-sm btn-ghost"><i class="fa fa-external-link-alt"></i> Live Demo</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-img">
+            <img src="https://via.placeholder.com/400x200/1a1a2e/00d4ff?text=Personal+Portfolio" alt="Personal Portfolio" width="400" height="200" loading="lazy"/>
+            <div class="project-overlay"><span class="project-num">#03</span></div>
+          </div>
+          <div class="project-body">
+            <h3>Personal Portfolio Website</h3>
+            <p>A responsive one-page portfolio built from scratch using HTML and CSS, showcasing projects, skills, and contact information for recruiters.</p>
+            <div class="tech-tags"><span class="tech">HTML5</span><span class="tech">CSS3</span><span class="tech">JavaScript</span></div>
+          </div>
+          <div class="project-footer">
+            <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-sm btn-outline"><i class="fab fa-github"></i> View Code</a>
+            <a href="#" target="_blank" rel="noopener" class="btn btn-sm btn-primary-sm"><i class="fa fa-external-link-alt"></i> Live Demo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EDUCATION ── -->
+  <section class="section section-alt" id="education">
+    <div class="container">
+      <h2 class="section-title">My <span class="accent">Education</span></h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa fa-graduation-cap"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <h3>Bachelor of Technology — Computer Science &amp; Engineering</h3>
+                <p class="institution">CGC University &nbsp;·&nbsp; Mohali, Punjab, India</p>
+              </div>
+              <span class="timeline-badge">2025 – 2029</span>
+            </div>
+            <div class="coursework">
+              <p class="coursework-label">Key Coursework:</p>
+              <div class="skill-badges" style="margin-top:.5rem">
+                <span class="badge">Data Structures</span>
+                <span class="badge">Algorithms</span>
+                <span class="badge">Object-Oriented Programming</span>
+                <span class="badge">Web Technologies</span>
+                <span class="badge">Database Management</span>
+                <span class="badge">Operating Systems</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa fa-school"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <h3>Senior Secondary (12th) — Science (PCM + CS)</h3>
+                <p class="institution">Kendriya Vidyalaya No. 1 Sagar  &nbsp;·&nbsp; Mohali, Punjab</p>
+              </div>
+              <span class="timeline-badge">2020 – 2022</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CERTIFICATES / ACHIEVEMENTS ── -->
+  <section class="section" id="certificates">
+    <div class="container">
+      <h2 class="section-title">Achievements &amp; <span class="accent">Certificates</span></h2>
+      <p class="section-sub">Milestones and recognitions along the journey</p>
+      <div class="achieve-grid">
+        <div class="achieve-card">
+          <div class="achieve-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fab fa-python"></i></div>
+          <h3>Python for Everybody</h3>
+          <p>Coursera / University of Michigan — Completed the beginner Python specialisation track.</p>
+          <span class="achieve-tag">Online Course</span>
+        </div>
+        <div class="achieve-card">
+          <div class="achieve-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><i class="fab fa-java"></i></div>
+          <h3>Java Programming Basics</h3>
+          <p>HackerRank Java Gold Badge — Solved 30+ Java challenges covering OOP and data types.</p>
+          <span class="achieve-tag">Coding Platform</span>
+        </div>
+        <div class="achieve-card">
+          <div class="achieve-icon" style="background:linear-gradient(135deg,#10b981,#047857)"><i class="fa fa-trophy"></i></div>
+          <h3>College Hackathon Participant</h3>
+          <p>Participated in a 24-hour college-level hackathon, building a utility app in a team of three.</p>
+          <span class="achieve-tag">Hackathon</span>
+        </div>
+        <div class="achieve-card">
+          <div class="achieve-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)"><i class="fa fa-code"></i></div>
+          <h3>LeetCode — 50+ Problems Solved</h3>
+          <p>Consistently practising DSA problems on LeetCode to sharpen problem-solving skills.</p>
+          <span class="achieve-tag">Problem Solving</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section class="section section-alt" id="contact">
+    <div class="container">
+      <h2 class="section-title">Get In <span class="accent">Touch</span></h2>
+      <p class="section-sub">I'd love to hear from you — whether it's an internship, a project, or just a hello!</p>
+      <div class="contact-grid">
+        <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <label for="cname">Your Name</label>
+            <input type="text" id="cname" name="name" placeholder="Ravi Sharma" required />
+          </div>
+          <div class="form-group">
+            <label for="cemail">Email Address</label>
+            <input type="email" id="cemail" name="email" placeholder="ravi@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="cmessage">Message</label>
+            <textarea id="cmessage" name="message" rows="5" placeholder="Hi, I'd like to discuss an internship opportunity..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">
+            <i class="fa fa-paper-plane"></i> Send Message
+          </button>
+          <p class="form-note" id="formNote"></p>
+        </form>
+        <div class="contact-info">
+          <div class="info-card">
+            <i class="fa fa-map-marker-alt"></i>
+            <div><h3 class="info-card-title">Location</h3><p>Mohali, Punjab, India</p></div>
+          </div>
+          <div class="info-card">
+            <i class="fa fa-envelope"></i>
+            <div><h3 class="info-card-title">Email</h3><a href="mailto:you@email.com">Shitalendrak@gmail.com</a></div>
+          </div>
+          <div class="info-card">
+            <i class="fa fa-briefcase"></i>
+            <div><h3 class="info-card-title">Status</h3><p>🟢 Open to Internships</p></div>
+          </div>
+          <div class="social-links">
+            <a href="https://github.com/Shitalendra-Immortal" target="_blank" rel="noopener" class="social-btn" aria-label="GitHub">
+              <i class="fab fa-github"></i><span>GitHub</span>
+            </a>
+            <a href="https://linkedin.com/in/shitalendra-kumar-yadav-018442378/" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i><span>LinkedIn</span>
+            </a>
+            <a href="mailto:shitalendrak@gmail.com" class="social-btn" aria-label="Email">
+              <i class="fa fa-envelope"></i><span>Email</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <p>Designed &amp; Built by <span class="accent">Shitalendra Kumar Yadav</span> · Mohali, Punjab 🇮🇳</p>
+    <p style="margin-top:.4rem;font-size:.78rem;opacity:.7">Made with ❤️ using HTML, CSS &amp; JavaScript</p>
+  </footer>
+
+  <button class="back-top" id="backTop" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+  </button>
+
+  <!-- Three.js CDN -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script defer src="analytics.js"></script>
+  <script defer src="script.js"></script>
+</body>
+</html>

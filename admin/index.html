@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Portfolio</title>
+  <link rel="stylesheet" href="admin-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-box">
+      <div class="login-header">
+        <i class="fas fa-shield-halved"></i>
+        <h1>Admin Login</h1>
+        <p>Portfolio Dashboard</p>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">
+            <i class="fas fa-envelope"></i> Email
+          </label>
+          <input type="email" id="loginEmail" required placeholder="admin@example.com">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">
+            <i class="fas fa-lock"></i> Password
+          </label>
+          <input type="password" id="loginPassword" required placeholder="Enter password">
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+        <p id="loginError" class="error-message"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" class="dashboard" style="display: none;">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2><i class="fas fa-chart-line"></i> Portfolio</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#overview" class="nav-item active" data-section="overview">
+          <i class="fas fa-home"></i> Overview
+        </a>
+        <a href="#contacts" class="nav-item" data-section="contacts">
+          <i class="fas fa-envelope"></i> Messages
+          <span class="badge" id="unreadBadge">0</span>
+        </a>
+        <a href="#analytics" class="nav-item" data-section="analytics">
+          <i class="fas fa-chart-bar"></i> Analytics
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="logoutBtn" class="btn btn-ghost">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-bar">
+        <h1 id="pageTitle">Overview</h1>
+        <div class="user-info">
+          <span id="userEmail"></span>
+          <i class="fas fa-user-circle"></i>
+        </div>
+      </header>
+
+      <!-- Overview Section -->
+      <section id="overviewSection" class="content-section">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <i class="fas fa-eye"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="todayViews">-</h3>
+              <p>Views Today</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="unreadCount">-</h3>
+              <p>Unread Messages</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="totalViews">-</h3>
+              <p>Total Views</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="totalContacts">-</h3>
+              <p>Total Messages</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h2>Recent Activity</h2>
+          <div id="recentActivity" class="activity-list"></div>
+        </div>
+      </section>
+
+      <!-- Contacts Section -->
+      <section id="contactsSection" class="content-section" style="display: none;">
+        <div class="section-header">
+          <h2>Contact Messages</h2>
+          <div class="filter-group">
+            <select id="statusFilter" class="filter-select">
+              <option value="">All Status</option>
+              <option value="unread">Unread</option>
+              <option value="read">Read</option>
+              <option value="replied">Replied</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+        </div>
+        <div id="contactsList" class="contacts-list"></div>
+        <div id="contactsLoader" class="loader" style="display: none;">
+          <i class="fas fa-spinner fa-spin"></i> Loading...
+        </div>
+      </section>
+
+      <!-- Analytics Section -->
+      <section id="analyticsSection" class="content-section" style="display: none;">
+        <div class="section-header">
+          <h2>Analytics Overview</h2>
+          <div class="filter-group">
+            <select id="analyticsRange" class="filter-select">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <h3><i class="fas fa-mouse-pointer"></i> Events</h3>
+            <div id="eventsList" class="list-content"></div>
+          </div>
+          <div class="analytics-card">
+            <h3><i class="fas fa-mobile-alt"></i> Devices</h3>
+            <div id="devicesList" class="list-content"></div>
+          </div>
+          <div class="analytics-card">
+            <h3><i class="fas fa-browser"></i> Browsers</h3>
+            <div id="browsersList" class="list-content"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Contact Detail Modal -->
+  <div id="contactModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Message Details</h2>
+        <button class="close-btn" onclick="closeContactModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" onclick="deleteContact()">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+        <button class="btn btn-success" onclick="markAsReplied()">
+          <i class="fas fa-check"></i> Mark as Replied
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin-script.js"></script>
+</body>
+</html>

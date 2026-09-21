@@ -1,0 +1,11 @@
+{
+  "name": "portfolio-frontend",
+  "version": "1.0.0",
+  "description": "Development server for portfolio",
+  "scripts": {
+    "start": "npx http-server -p 3000 -o"
+  },
+  "keywords": [],
+  "author": "Shitalendra Kumar Yadav",
+  "license": "MIT"
+}

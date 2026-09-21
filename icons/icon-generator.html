@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PWA Icon Generator</title>
+  <style>
+    body { font-family: system-ui; padding: 2rem; max-width: 600px; margin: 0 auto; }
+    canvas { border: 2px solid #ddd; margin: 1rem 0; }
+    input { padding: 0.5rem; font-size: 1rem; margin: 0.5rem; }
+    button { padding: 0.6rem 1.2rem; font-size: 1rem; background: #00d4ff; border: none; cursor: pointer; border-radius: 6px; }
+    button:hover { background: #00b8e6; }
+    .preview { display: flex; gap: 1rem; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <h1>Generate PWA Icons</h1>
+  <p>Create simple icon files for your portfolio PWA.</p>
+
+  <label>Your Initials (2-3 letters): <input type="text" id="initials" value="YN" maxlength="3" /></label><br>
+  <label>Background Color: <input type="color" id="bgColor" value="#06060f" /></label><br>
+  <label>Text Color: <input type="color" id="textColor" value="#00d4ff" /></label><br>
+
+  <button onclick="generateIcons()">Generate Icons</button>
+
+  <div class="preview" id="preview"></div>
+
+  <script>
+    function generateIcons() {
+      const initials = document.getElementById('initials').value.toUpperCase() || 'YN';
+      const bgColor = document.getElementById('bgColor').value;
+      const textColor = document.getElementById('textColor').value;
+      const preview = document.getElementById('preview');
+      preview.innerHTML = '';
+
+      [192, 512].forEach(size => {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        // Background
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, size, size);
+
+        // Text
+        ctx.fillStyle = textColor;
+        ctx.font = `bold ${size * 0.38}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(initials, size / 2, size / 2);
+
+        // Border glow
+        ctx.strokeStyle = textColor;
+        ctx.lineWidth = size * 0.02;
+        ctx.strokeRect(size * 0.1, size * 0.1, size * 0.8, size * 0.8);
+
+        const div = document.createElement('div');
+        div.innerHTML = `<h3>${size}×${size}</h3>`;
+        div.appendChild(canvas);
+
+        const link = document.createElement('a');
+        link.download = `icon-${size}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.textContent = `Download icon-${size}.png`;
+        link.style.display = 'block';
+        link.style.marginTop = '0.5rem';
+        div.appendChild(link);
+
+        preview.appendChild(div);
+      });
+    }
+
+    // Generate on load
+    generateIcons();
+  </script>
+</body>
+</html>

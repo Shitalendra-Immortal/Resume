@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio - Local Launcher</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+    .status {
+      background: #f0f9ff;
+      border-left: 4px solid #0284c7;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    .status.error {
+      background: #fef2f2;
+      border-color: #dc2626;
+    }
+    .status.success {
+      background: #f0fdf4;
+      border-color: #16a34a;
+    }
+    .status-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #0284c7;
+    }
+    .status.error .status-title { color: #dc2626; }
+    .status.success .status-title { color: #16a34a; }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 15px;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    .btn.secondary {
+      background: #64748b;
+    }
+    .btn.secondary:hover {
+      background: #475569;
+    }
+    .info {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #475569;
+    }
+    .info strong {
+      color: #1e293b;
+    }
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .inline-flex {
+      display: inline-flex;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Portfolio Launcher</h1>
+    <p class="subtitle">Local development server for your portfolio</p>
+
+    <div id="backendStatus" class="status">
+      <div class="status-title inline-flex">
+        <span class="spinner"></span>
+        Checking backend status...
+      </div>
+      <div id="statusMessage">Connecting to http://localhost:5000</div>
+    </div>
+
+    <div id="buttons" style="display: none;">
+      <a href="index.html" class="btn" target="_blank">📱 Open Portfolio</a>
+      <button onclick="openAdmin()" class="btn">🔐 Open Admin Dashboard</button>
+      <button onclick="checkStatus()" class="btn secondary">🔄 Refresh Status</button>
+    </div>
+
+    <div class="info">
+      <strong>📋 Admin Login Credentials:</strong><br>
+      Email: <code>admin@shitalendra.dev</code><br>
+      Password: <code>Shitalendra@2026!</code>
+      <br><br>
+      <strong>⚠️ Important:</strong> Make sure the backend server is running in your terminal.
+      <br><br>
+      <strong>Start backend:</strong><br>
+      <code>cd backend && npm run dev</code>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000';
+
+    async function checkStatus() {
+      const statusDiv = document.getElementById('backendStatus');
+      const messageDiv = document.getElementById('statusMessage');
+      const buttonsDiv = document.getElementById('buttons');
+
+      statusDiv.className = 'status';
+      statusDiv.innerHTML = `
+        <div class="status-title inline-flex">
+          <span class="spinner"></span>
+          Checking backend status...
+        </div>
+        <div id="statusMessage">Connecting to ${API_URL}</div>
+      `;
+
+      try {
+        const response = await fetch(`${API_URL}/api/health`);
+        const data = await response.json();
+
+        if (data.status === 'OK') {
+          statusDiv.className = 'status success';
+          statusDiv.innerHTML = `
+            <div class="status-title">✅ Backend is running!</div>
+            <div>Server: ${API_URL}</div>
+            <div>Status: ${data.status}</div>
+            <div>Time: ${new Date(data.timestamp).toLocaleTimeString()}</div>
+          `;
+          buttonsDiv.style.display = 'block';
+        }
+      } catch (error) {
+        statusDiv.className = 'status error';
+        statusDiv.innerHTML = `
+          <div class="status-title">❌ Backend is not running</div>
+          <div>Please start the backend server:</div>
+          <div style="margin-top: 10px; background: #fee; padding: 10px; border-radius: 5px; font-family: monospace;">
+            cd backend<br>npm run dev
+          </div>
+        `;
+        buttonsDiv.style.display = 'none';
+      }
+    }
+
+    function openAdmin() {
+      // Store the API URL in localStorage so admin panel can access it
+      localStorage.setItem('API_URL', API_URL);
+      window.open('admin/index.html', '_blank');
+    }
+
+    // Check status on load
+    checkStatus();
+  </script>
+</body>
+</html>

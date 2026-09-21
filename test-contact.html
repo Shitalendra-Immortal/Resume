@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      background: #667eea;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #5568d3;
+    }
+    .message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    .success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #10b981;
+    }
+    .error {
+      background: #fee;
+      color: #991b1b;
+      border: 1px solid #ef4444;
+    }
+    .info {
+      background: #e0f2fe;
+      color: #075985;
+      border: 1px solid #0284c7;
+      margin-bottom: 20px;
+    }
+    #debug {
+      background: #1f2937;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 12px;
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Contact Form Test</h1>
+
+  <div class="message info">
+    <strong>Backend Status:</strong> <span id="backendStatus">Checking...</span><br>
+    <strong>Testing URL:</strong> http://localhost:5000/api/contact
+  </div>
+
+  <form id="testForm">
+    <div class="form-group">
+      <label>Name:</label>
+      <input type="text" id="name" value="Test User" required>
+    </div>
+    <div class="form-group">
+      <label>Email:</label>
+      <input type="email" id="email" value="test@example.com" required>
+    </div>
+    <div class="form-group">
+      <label>Message:</label>
+      <textarea id="message" rows="4" required>Hello! This is a test message to verify the contact form is working correctly.</textarea>
+    </div>
+    <button type="submit">Send Test Message</button>
+  </form>
+
+  <div id="result"></div>
+  <div id="debug"></div>
+
+  <script>
+    const API_URL = 'http://localhost:5000';
+    const debugLog = document.getElementById('debug');
+    const resultDiv = document.getElementById('result');
+
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const color = type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#60a5fa';
+      debugLog.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+      debugLog.scrollTop = debugLog.scrollHeight;
+    }
+
+    // Check backend status on load
+    async function checkBackend() {
+      const statusSpan = document.getElementById('backendStatus');
+      try {
+        log('Checking backend health...');
+        const response = await fetch(`${API_URL}/api/health`);
+        const data = await response.json();
+
+        if (data.status === 'OK') {
+          statusSpan.innerHTML = '<span style="color: #10b981;">✅ Online</span>';
+          log('Backend is running!', 'success');
+        } else {
+          throw new Error('Unexpected response');
+        }
+      } catch (error) {
+        statusSpan.innerHTML = '<span style="color: #ef4444;">❌ Offline</span>';
+        log(`Backend check failed: ${error.message}`, 'error');
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('testForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        message: document.getElementById('message').value.trim()
+      };
+
+      log('Preparing to send form data...');
+      log('Data: ' + JSON.stringify(formData));
+
+      resultDiv.innerHTML = '<div class="message info">Sending...</div>';
+
+      try {
+        log(`Sending POST request to ${API_URL}/api/contact`);
+
+        const response = await fetch(`${API_URL}/api/contact`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        log(`Response status: ${response.status} ${response.statusText}`);
+
+        const result = await response.json();
+        log('Response data: ' + JSON.stringify(result));
+
+        if (result.success) {
+          resultDiv.innerHTML = `<div class="message success">
+            ✅ <strong>Success!</strong><br>
+            ${result.message}<br>
+            <small>Message ID: ${result.data.id}</small>
+          </div>`;
+          log('Form submitted successfully!', 'success');
+        } else {
+          throw new Error(result.message || 'Submission failed');
+        }
+      } catch (error) {
+        log(`Error occurred: ${error.message}`, 'error');
+        resultDiv.innerHTML = `<div class="message error">
+          ❌ <strong>Error!</strong><br>
+          ${error.message}
+        </div>`;
+      }
+    });
+
+    // Check backend on page load
+    checkBackend();
+    log('Test page loaded');
+  </script>
+</body>
+</html>

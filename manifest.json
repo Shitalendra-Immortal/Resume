@@ -1,0 +1,26 @@
+{
+  "name": "Student Developer Portfolio",
+  "short_name": "Portfolio",
+  "description": "Resume portfolio for a student software developer — Java, Python, Web Dev",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#06060f",
+  "theme_color": "#00d4ff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "education"],
+  "lang": "en-IN"
+}
