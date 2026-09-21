@@ -8,6 +8,9 @@ require('dotenv').config();
 
 const app = express();
 
+// Trust the Render proxy so rate limiting sees real client IPs
+app.set('trust proxy', 1);
+
 // Import routes
 const contactRoutes = require('./routes/contact');
 const analyticsRoutes = require('./routes/analytics');
