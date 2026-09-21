@@ -56,9 +56,10 @@ const buildHtml = ({ name, email, message, submittedAt }) => `
 `;
 
 const sendViaResend = async ({ name, email, message, submittedAt }) => {
-  // On Resend's free tier (no custom domain), the sender must be the email
-  // address the Resend account was created with, and mail is delivered to it.
-  const fromAddress = process.env.EMAIL_FROM || process.env.EMAIL_USER;
+  // On Resend's free tier (no verified custom domain), mail must be sent from
+  // Resend's sandbox address. Set RESEND_FROM to your own verified address if
+  // you add a custom domain later.
+  const fromAddress = process.env.RESEND_FROM || 'onboarding@resend.dev';
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
