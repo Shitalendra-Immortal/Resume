@@ -360,7 +360,7 @@ async function handleSubmit(e) {
     // Change this URL to your deployed backend URL in production
     const API_URL = (['localhost', '127.0.0.1'].includes(window.location.hostname) || window.location.protocol === 'file:')
       ? 'http://localhost:5000'
-      : 'https://your-backend-url.com';
+      : 'https://resume-xqnt.onrender.com';
 
     const response = await fetch(`${API_URL}/api/contact`, {
       method: 'POST',

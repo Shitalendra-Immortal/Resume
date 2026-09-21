@@ -19,7 +19,7 @@ window.trackEvent = (event, data = {}) => {
 
   const API_URL = (['localhost', '127.0.0.1'].includes(window.location.hostname) || window.location.protocol === 'file:')
     ? 'http://localhost:5000'
-    : 'https://your-backend-url.com';
+    : 'https://resume-xqnt.onrender.com';
 
   fetch(`${API_URL}/api/analytics/event`, {
     method: 'POST',

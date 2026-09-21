@@ -1,8 +1,8 @@
 // API Configuration
 const API_URL = localStorage.getItem('API_URL') ||
-  ((window.location.hostname === 'localhost' || window.location.protocol === 'file:')
+  ((['localhost', '127.0.0.1'].includes(window.location.hostname) || window.location.protocol === 'file:')
     ? 'http://localhost:5000'
-    : 'https://your-backend-url.com'); // Change this in production
+    : 'https://resume-xqnt.onrender.com'); // Change this in production
 
 console.log('Admin Panel - Using API URL:', API_URL);
 
