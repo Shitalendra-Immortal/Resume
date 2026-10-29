@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -8,9 +8,21 @@
   <meta name="author" content="Shitalendra Kumar Yadav" />
   <meta name="robots" content="index, follow" />
 
+  <!-- Open Graph / Twitter link previews -->
+  <meta property="og:title" content="Shitalendra Kumar Yadav | Student Developer Portfolio" />
+  <meta property="og:description" content="Portfolio of Shitalendra Kumar Yadav \u2014 a passionate student developer skilled in Java, Python, and Web Development. Explore projects, skills, and contact info." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://shitalendra.vercel.app/" />
+  <meta property="og:image" content="https://shitalendra.vercel.app/icons/icon-512.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Shitalendra Kumar Yadav | Student Developer Portfolio" />
+  <meta name="twitter:description" content="Portfolio of Shitalendra Kumar Yadav \u2014 a passionate student developer skilled in Java, Python, and Web Development." />
+  <meta name="twitter:image" content="https://shitalendra.vercel.app/icons/icon-512.png" />
+  <link rel="icon" href="icons/icon-192.png" />
+
   <!-- PWA manifest + theme -->
   <link rel="manifest" href="manifest.json"/>
-  <meta name="theme-color" content="#00d4ff"/>
+  <meta name="theme-color" content="#0c0a08"/>
   <link rel="apple-touch-icon" href="icons/icon-192.png"/>
 
   <!-- Preconnect to external origins for faster loading -->
@@ -22,29 +34,31 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{font-size:16px}
-    body{font-family:'Inter',system-ui,sans-serif;background:#06060f;color:#e8eaf6;line-height:1.7;overflow-x:hidden}
+    body{font-family:'Inter',system-ui,sans-serif;background:#0c0a08;color:#f3ede3;line-height:1.7;overflow-x:hidden}
     body.preload{overflow:hidden}
-    #introScreen{position:fixed;inset:0;z-index:9999;background:#06060f;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .8s ease,visibility .8s ease}
+    #introScreen{position:fixed;inset:0;z-index:9999;background:#0c0a08;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .8s ease,visibility .8s ease}
     #introScreen.hidden{opacity:0;visibility:hidden;pointer-events:none}
     .intro-inner{text-align:center}
     .intro-logo{font-family:'Cinzel',serif;font-size:clamp(1.6rem,5vw,2.8rem);font-weight:600;color:#fff;letter-spacing:.12em;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;gap:.2em}
-    .intro-bracket{color:#00d4ff}.intro-name{color:#fff;min-width:1ch}.intro-cursor{color:#00d4ff;animation:blink .7s steps(1) infinite}
+    .intro-bracket{color:#fff}.intro-name{color:#fff;min-width:1ch}.intro-cursor{color:#fff;animation:blink .7s steps(1) infinite}
     @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
     .intro-bar-wrap{width:min(340px,80vw);height:3px;background:rgba(255,255,255,.08);border-radius:4px;margin:0 auto 1.2rem;overflow:hidden}
-    .intro-bar{height:100%;width:0;background:linear-gradient(90deg,#00d4ff,#a855f7);border-radius:4px;transition:width .05s linear}
+    .intro-bar{height:100%;width:0;background:linear-gradient(90deg,#ffffff,#9a9a9a);border-radius:4px;transition:width .05s linear}
     .intro-label{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.78);font-family:'Fira Code',monospace}
-    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;background:rgba(6,6,15,.82);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid rgba(255,255,255,.06)}
-    #bgCanvas,#trailCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
-    #bgCanvas{z-index:0}#trailCanvas{z-index:9998}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;background:rgba(12,10,8,.82);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid rgba(255,255,255,.06)}
+    #bgVideo,#trailCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+    #bgVideo{z-index:0;object-fit:cover}#trailCanvas{z-index:9998}
   </style>
   <!-- Load main stylesheet asynchronously -->
   <link rel="preload" as="style" href="style.css" onload="this.onload=null;this.rel='stylesheet'"/>
   <noscript><link rel="stylesheet" href="style.css"/></noscript>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Cinzel:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'"/>
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet"/></noscript>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&family=Cinzel:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'"/>
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&family=Cinzel:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/></noscript>
   <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'"/>
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/></noscript>
 
+  <!-- If JS is disabled, never trap the visitor behind the intro screen -->
+  <noscript><style>#introScreen{display:none!important}body.preload{overflow:auto!important}</style></noscript>
   <!-- Font display is handled by &display=swap in the Google Fonts URL -->
 </head>
 <body class="preload">
@@ -66,18 +80,24 @@
   <!-- ══ CURSOR TRAIL ══ -->
   <canvas id="trailCanvas"></canvas>
 
-  <!-- ══ 3D CANVAS (Three.js background) ══ -->
-  <canvas id="bgCanvas"></canvas>
+  <!-- ══ VIDEO BACKGROUND ══ -->
+  <video id="bgVideo" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+    <source src="bg-video.mp4" type="video/mp4" media="(min-width: 769px)">
+  </video>
+
+  <!-- Static poster for small screens (the video source above is disabled there) -->
+  <div id="bgPoster" aria-hidden="true"></div>
 
   <!-- ══ GLASS OVERLAY (frosted glass layer) ══ -->
   <div class="glass-overlay"></div>
 
-  <!-- ══ AMBIENT SOUND TOGGLE ══ -->
+  <!-- ══ WAR DRUMS AMBIENT SOUND ══ -->
   <div class="sound-toggle-wrap">
-    <button class="sound-btn" id="soundBtn" aria-label="Toggle ambient sound" title="Toggle ambient wind sound">
+    <button class="sound-btn" id="soundBtn" aria-label="Toggle war drums sound" title="Play war drums">
       <i class="fa fa-volume-xmark" id="soundIcon"></i>
     </button>
   </div>
+  <audio id="warDrums" src="war-drums.mp3" loop preload="auto"></audio>
 
   <!-- ══ ACCENT COLOUR PICKER (floating) ══ -->
   <div class="colour-picker-wrap" id="colourPicker" title="Pick accent colour">
@@ -85,14 +105,12 @@
       <i class="fa fa-palette"></i>
     </button>
     <div class="colour-swatches" id="colourSwatches">
-      <button class="swatch" data-colour="#00d4ff" style="background:#00d4ff" title="Cyan"></button>
-      <button class="swatch" data-colour="#a855f7" style="background:#a855f7" title="Purple"></button>
-      <button class="swatch" data-colour="#f59e0b" style="background:#f59e0b" title="Amber"></button>
-      <button class="swatch" data-colour="#10b981" style="background:#10b981" title="Emerald"></button>
-      <button class="swatch" data-colour="#ef4444" style="background:#ef4444" title="Red"></button>
-      <button class="swatch" data-colour="#f97316" style="background:#f97316" title="Orange"></button>
-      <button class="swatch active" data-colour="#00d4ff" style="background:#00d4ff"></button>
-      <input type="color" id="customColour" value="#00d4ff" title="Custom colour"/>
+      <button class="swatch" data-colour="#ffffff" style="background:#ffffff" title="White"></button>
+      <button class="swatch" data-colour="#b5b5b5" style="background:#b5b5b5" title="Silver"></button>
+      <button class="swatch" data-colour="#7a7a7a" style="background:#7a7a7a" title="Gray"></button>
+      <button class="swatch" data-colour="#3d3d3d" style="background:#3d3d3d" title="Charcoal"></button>
+      <button class="swatch active" data-colour="#ffffff" style="background:#ffffff"></button>
+      <input type="color" id="customColour" value="#ffffff" title="Custom colour"/>
     </div>
   </div>
 
@@ -111,10 +129,6 @@
         <li><a href="#certificates">Achievements</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <!-- Theme toggle -->
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark">
-        <i class="fa fa-sun" id="themeIcon"></i>
-      </button>
     </div>
   </nav>
 
@@ -162,7 +176,7 @@
       <h2 class="section-title">About <span class="accent">Me</span></h2>
       <div class="about-grid">
         <div class="about-img-wrap">
-          <img src="https://via.placeholder.com/320x320/1a1a2e/00d4ff?text=YN" alt="Profile Photo" class="about-img" width="320" height="320" loading="lazy"/>
+          <img src="https://via.placeholder.com/320x320/141414/9a9a9a?text=YN" alt="Profile Photo" class="about-img" width="320" height="320" loading="lazy"/>
           <div class="about-img-badge"><i class="fa fa-code"></i> Open to Internships</div>
         </div>
         <div class="about-text">
@@ -263,7 +277,7 @@
       <div class="projects-grid">
         <div class="project-card">
           <div class="project-img">
-            <img src="https://via.placeholder.com/400x200/0f3460/00d4ff?text=Student+Grade+Tracker" alt="Student Grade Tracker" width="400" height="200" loading="lazy"/>
+            <img src="https://via.placeholder.com/400x200/141414/9a9a9a?text=Student+Grade+Tracker" alt="Student Grade Tracker" width="400" height="200" loading="lazy"/>
             <div class="project-overlay"><span class="project-num">#01</span></div>
           </div>
           <div class="project-body">
@@ -278,7 +292,7 @@
         </div>
         <div class="project-card">
           <div class="project-img">
-            <img src="https://via.placeholder.com/400x200/16213e/00d4ff?text=DSA+Visualiser" alt="DSA Visualiser" width="400" height="200" loading="lazy"/>
+            <img src="https://via.placeholder.com/400x200/141414/9a9a9a?text=DSA+Visualiser" alt="DSA Visualiser" width="400" height="200" loading="lazy"/>
             <div class="project-overlay"><span class="project-num">#02</span></div>
           </div>
           <div class="project-body">
@@ -293,7 +307,7 @@
         </div>
         <div class="project-card">
           <div class="project-img">
-            <img src="https://via.placeholder.com/400x200/1a1a2e/00d4ff?text=Personal+Portfolio" alt="Personal Portfolio" width="400" height="200" loading="lazy"/>
+            <img src="https://via.placeholder.com/400x200/141414/9a9a9a?text=Personal+Portfolio" alt="Personal Portfolio" width="400" height="200" loading="lazy"/>
             <div class="project-overlay"><span class="project-num">#03</span></div>
           </div>
           <div class="project-body">
@@ -361,25 +375,25 @@
       <p class="section-sub">Milestones and recognitions along the journey</p>
       <div class="achieve-grid">
         <div class="achieve-card">
-          <div class="achieve-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fab fa-python"></i></div>
+          <div class="achieve-icon" style="background:linear-gradient(135deg,#b5b5b5,#7a7a7a)"><i class="fab fa-python"></i></div>
           <h3>Python for Everybody</h3>
           <p>Coursera / University of Michigan — Completed the beginner Python specialisation track.</p>
           <span class="achieve-tag">Online Course</span>
         </div>
         <div class="achieve-card">
-          <div class="achieve-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><i class="fab fa-java"></i></div>
+          <div class="achieve-icon" style="background:linear-gradient(135deg,#a8a8a8,#6e6e6e)"><i class="fab fa-java"></i></div>
           <h3>Java Programming Basics</h3>
           <p>HackerRank Java Gold Badge — Solved 30+ Java challenges covering OOP and data types.</p>
           <span class="achieve-tag">Coding Platform</span>
         </div>
         <div class="achieve-card">
-          <div class="achieve-icon" style="background:linear-gradient(135deg,#10b981,#047857)"><i class="fa fa-trophy"></i></div>
+          <div class="achieve-icon" style="background:linear-gradient(135deg,#c2c2c2,#8a8a8a)"><i class="fa fa-trophy"></i></div>
           <h3>College Hackathon Participant</h3>
           <p>Participated in a 24-hour college-level hackathon, building a utility app in a team of three.</p>
           <span class="achieve-tag">Hackathon</span>
         </div>
         <div class="achieve-card">
-          <div class="achieve-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)"><i class="fa fa-code"></i></div>
+          <div class="achieve-icon" style="background:linear-gradient(135deg,#9a9a9a,#5a5a5a)"><i class="fa fa-code"></i></div>
           <h3>LeetCode — 50+ Problems Solved</h3>
           <p>Consistently practising DSA problems on LeetCode to sharpen problem-solving skills.</p>
           <span class="achieve-tag">Problem Solving</span>
@@ -419,7 +433,7 @@
           </div>
           <div class="info-card">
             <i class="fa fa-envelope"></i>
-            <div><h3 class="info-card-title">Email</h3><a href="mailto:you@email.com">Shitalendrak@gmail.com</a></div>
+            <div><h3 class="info-card-title">Email</h3><a href="mailto:shitalendrak@gmail.com">Shitalendrak@gmail.com</a></div>
           </div>
           <div class="info-card">
             <i class="fa fa-briefcase"></i>
@@ -453,8 +467,6 @@
     <i class="fa fa-arrow-up"></i>
   </button>
 
-  <!-- Three.js CDN -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script defer src="analytics.js"></script>
   <script defer src="script.js"></script>
 </body>
