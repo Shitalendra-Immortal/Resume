@@ -314,6 +314,12 @@ nav,section,footer,.back-top{position:relative;z-index:2}
   display:flex;align-items:flex-end;padding:.7rem 1rem;
 }
 .project-num{font-family:'Fira Code',monospace;color:var(--accent);font-size:.85rem;font-weight:500}
+.project-status{
+  position:absolute;top:.75rem;right:.75rem;z-index:2;
+  background:rgba(12,10,8,.85);border:1px solid var(--border-hover);
+  color:var(--text-primary);font-family:'Fira Code',monospace;font-size:.7rem;font-weight:600;
+  padding:.3rem .65rem;border-radius:20px;letter-spacing:.02em;
+}
 .project-body{padding:1.4rem;flex:1}
 .project-body h3{font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
 .project-body p{font-size:.87rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1rem}
